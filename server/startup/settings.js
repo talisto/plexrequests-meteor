@@ -36,8 +36,6 @@ Meteor.startup(function () {
 	Sonarr.api = settings.sonarrAPI;
 	Sonarr.directory = settings.sonarrDIRECTORY || "";
 
-
-	// Meteor.call("getPosters");
-	Meteor.call("updatePosters");
-	
+	var updateDB = Meteor.call("updateSeasonCount");
+	if (updateDB === true) { settings.updateDB = true }
 });
