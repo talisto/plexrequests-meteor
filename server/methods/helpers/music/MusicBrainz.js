@@ -1,6 +1,6 @@
 MusicBrainz = {
 
-  query: function(type, id, query, timeout) {
+  query: function(type, id, params, timeout) {
     if ( ! timeout) {
       timeout = 5000;
     }
@@ -9,16 +9,19 @@ MusicBrainz = {
       id = '';
     }
 
+    if ( ! params) {
+      params = {};
+    }
+
+    params.fmt = 'json';
+
     try {
       var url = 'http://musicbrainz.org/ws/2/' + type + '/' + id;
       var result = HTTP.get(url, {
       headers: {
         "User-Agent": "PlexRequests/1.0"
       },
-      params: {
-        query: query,
-        fmt: 'json'
-      },
+      params: params,
       timeout: timeout
       });
       return JSON.parse(result.content);
@@ -29,7 +32,7 @@ MusicBrainz = {
 
   searchGroupedRelease: function(query, timeout) {
     var results = [];
-    var result = this.query('release-group', undefined, query, timeout);
+    var result = this.query('release-group', undefined, { query: query }, timeout);
     if (result && result['release-groups']) {
       result['release-groups'].forEach(function(group, index) {
         results.push({
@@ -49,12 +52,12 @@ MusicBrainz = {
   },
 
   getRelease: function(id, timeout) {
-    var result = this.query('release?inc=media+discids+artist-credits', id, undefined, timeout);
+    var result = this.query('release', id, { inc: 'media+discids+artist-credits' }, timeout);
     return result;
   },
 
   getReleaseGroup: function(id, timeout) {
-    var result = this.query('release-group?inc=artists+releases+media', id, undefined, timeout);
+    var result = this.query('release-group', id, { inc: 'artists+releases+media' }, timeout);
     return result;
   },
 };
