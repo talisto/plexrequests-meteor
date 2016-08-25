@@ -86,7 +86,10 @@ Headphones = {
 
   getArtist: function(id) {
     logger.info('Getting artist ' + id + ' from Headphones');
-    return this.query('getArtist', { id: id });
+    var result = this.query('getArtist', { id: id });
+    if ( ! result || ! result.albums || result.albums.length === 0) {
+      return false;
+    }
   },
 
   addArtist: function(id) {
@@ -96,7 +99,11 @@ Headphones = {
 
   getAlbum: function(id) {
     logger.info('Getting album ' + id + ' from Headphones');
-    return this.query('getAlbum', { id: id });
+    var result = this.query('getAlbum', { id: id });
+    if ( ! result || ! result.album || result.album.length === 0) {
+      return false;
+    }
+    return result;
   },
 
   addAlbum: function(id) {
