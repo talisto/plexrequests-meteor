@@ -99,27 +99,44 @@ Meteor.methods({
 
       if (settings.headphonesENABLED) {
 
-        var added = false;
         try {
-          added = Headphones.queueAlbum(request.id, request.artist_id);
-          console.log(added);
+
+            // headphones may take a very long time to queue the album if the artist doesn't exist,
+            // so we're going to queue it as a background task so that we can return a response to the user
+            // right away.  The task will start in 5 seconds.
+
+            SyncedCron.add({
+                name: "queue headphones album " + request.id,
+                schedule: function(parser) {
+                  var t = new Date();
+                  t.setSeconds(t.getSeconds() + 5);
+                  return parser.recur().on(t).fullDate();
+                },
+                job: function() {
+                  var result = Headphones.queueAlbum(request.id, request.artist_id);
+                  if (result) {
+                    logger.info('Queued album ' + id + ' in Headphones');
+                    return true;
+                  } else {
+                    logger.error('Error queuing album ' + id + 'in Headphones');
+                    return false;
+                  }
+                }
+            });
+
         } catch (error) {
           logger.error("Error adding to Headphones:", error.message);
           return false;
         }
 
-        if (added) {
-          try {
-            Music.insert(record);
-          } catch (error) {
-            logger.error(error.message);
-            return false;
-          }
-          Meteor.call("sendNotifications", request);
-          return true;
-        } else {
+        try {
+          Music.insert(record);
+        } catch (error) {
+          logger.error(error.message);
           return false;
         }
+        Meteor.call("sendNotifications", request);
+        return true;
       } else {
         try {
           Music.insert(record);
