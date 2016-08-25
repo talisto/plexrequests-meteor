@@ -28,6 +28,16 @@ Meteor.methods({
 				logger.error("Adding issue error -> " + error.message);
 				return false;
 			}
+		} else if (request.artist) {
+			try {
+				Music.update(request._id, {$push: {issues: issue}});
+				request.issues = issue;
+				Meteor.call("sendNotifications", request, "issue");
+				return true;
+			} catch (error) {
+				logger.error("Adding issue error -> " + error.message);
+				return false;
+			}
 		}
 	}
 });

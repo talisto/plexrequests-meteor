@@ -2,11 +2,18 @@
   <div class="row item">
     <div class="item-poster">
       <div class="col-sm-3">
-        {{#if posterExists}}
-            {{#if isTV}}
+        {{#if isTV}}
+            {{#if posterExists}}
                     <img src="{{poster_path}}" class="img-responsive" alt="Poster">
             {{/if}}
-            {{#if isMovie}}
+        {{/if}}
+        {{#if isMusic}}
+            {{#if albumThumb}}
+                <img src="{{albumThumb}}" class="img-responsive" alt="Poster">
+            {{/if}}
+        {{/if}}
+        {{#if isMovie}}
+            {{#if posterExists}}
                 <img src="https://image.tmdb.org/t/p/w184{{poster_path}}" class="img-responsive" alt="Poster">
             {{/if}}
         {{/if}}
@@ -14,9 +21,17 @@
     </div>
     <div class="item-body">
       <div class="col-sm-9">
+        {{#if isMusic}}
+        <h4><a href="{{link}}" target="_blank">{{artist}} - {{title}} ({{format}})</a></h4>
+        {{else}}
         <h4><a href="{{link}}" target="_blank">{{title}} ({{year}})</a></h4>
+        {{/if}}
         <p>
+        {{#if isMusic}}
+
+        {{else}}
           {{overview}}
+        {{/if}}
         </p>
         <div class="item-buttons">
           {{#if isRequested}}
@@ -40,7 +55,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-xs-12">
       <div class="item-divider"></div>

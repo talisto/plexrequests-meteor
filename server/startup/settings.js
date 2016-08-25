@@ -36,6 +36,12 @@ Meteor.startup(function () {
 	Sonarr.api = settings.sonarrAPI;
 	Sonarr.directory = settings.sonarrDIRECTORY || "";
 
+    //set Headphones on start-up
+    Headphones.url = (settings.headphonesSSL) ? "https://" + settings.headphonesURL : "http://" + settings.headphonesURL;
+    Headphones.port = settings.headphonesPORT;
+    Headphones.api = settings.headphonesAPI;
+    Headphones.directory = settings.headphonesDIRECTORY || "";
+
 	Meteor.call("updateSeasons");
 	Meteor.call("updateApproved");
 

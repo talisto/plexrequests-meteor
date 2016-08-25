@@ -4,8 +4,8 @@ Meteor.methods({
 		var poster = "https://image.tmdb.org/t/p/w154" + request.poster_path || "/";
 		var settings = Settings.find().fetch()[0];
 
-		request["notification_type"] = "request";
-		request["media_type"] = "Movie";
+		request.notification_type = "request";
+		request.media_type = "Movie";
 
 		// Check user request limit
 		var date = Date.now() - 6.048e8;

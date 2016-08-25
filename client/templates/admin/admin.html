@@ -14,7 +14,7 @@
 
       </div>
     </div>
-    
+
     {{#unless currentUser}}
       <div class="row">
         <div class="col-md-6 col-md-offset-1">
@@ -35,6 +35,7 @@
             <a href="#"><li class="list-group-item">CouchPotato</li></a>
             <a href="#"><li class="list-group-item">SickRage</li></a>
             <a href="#"><li class="list-group-item">Sonarr</li></a>
+            <a href="#"><li class="list-group-item">Headphones</li></a>
             <a href="#"><li class="list-group-item">Notifications</li></a>
             <a href="#"><li class="list-group-item">Logs</li></a>
             <a href="#"><li class="list-group-item">About</li></a>
@@ -45,14 +46,16 @@
           {{#autoForm collection="Settings" doc=settings id="updateGeneralSettingsForm" type="update" resetOnSuccess="false"}}
             {{> afQuickField name='searchOptionsMOVIES'}}
             {{> afQuickField name='searchOptionsTV'}}
+            {{> afQuickField name='searchOptionsMUSIC'}}
             <p class="text-muted">
               Choose the type of content that can be requested
             </p>
             <br>
             {{> afQuickField name='movieApproval'}}
             {{> afQuickField name='tvApproval'}}
+            {{> afQuickField name='musicApproval'}}
             <p class="text-muted">
-              Choose whether you would like to approve Movie or TV requests
+              Choose which types you would like to approve requests for
             </p>
             <br>
             {{> afQuickField name='tvWeeklyLimit' style="width:auto;"}}
@@ -63,6 +66,11 @@
             {{> afQuickField name='movieWeeklyLimit' style="width:auto;"}}
             <p class="text-muted">
               Set a Movie weekly request limit for your users. Hint: 0 means no limit
+            </p>
+            <br>
+            {{> afQuickField name='musicWeeklyLimit' style="width:auto;"}}
+            <p class="text-muted">
+              Set a Music weekly request limit for your users. Hint: 0 means no limit
             </p>
             <br>
             <button type="submit" class="btn btn-primary-outline btn-block">Update Settings</button>
@@ -147,7 +155,7 @@
             <button type="submit" class="btn btn-primary-outline btn-block" id="usersSettingsSubmit">Update Settings</button>
           </div>
         {{/if}}
-        
+
         <div class="col-md-8 settings-pane" style="display: none;" id="SettingsCouchPotato">
           {{#autoForm collection="Settings" doc=settings id="updateCouchPotatoSettingsForm" type="update" resetOnSuccess="false"}}
             {{> afQuickField name='couchPotatoENABLED'}}
@@ -241,6 +249,33 @@
           {{/autoForm}}
         </div>
 
+        <div class="col-md-8 settings-pane" style="display: none;" id="SettingsHeadphones">
+          {{#autoForm collection="Settings" doc=settings id="updateHeadphonesSettingsForm" type="update" resetOnSuccess="false"}}
+            {{> afQuickField name='headphonesENABLED'}}
+            <p class="text-muted">Enable Headphones for automated music downloading.</p>
+            <br>
+            <p><button class="btn btn-secondary-outline" id="headphonesTest">Test Headphones server</button></p>
+            <p class="text-muted">Test your Headphones server. Remember to save your settings first!</p>
+            <br>
+            {{> afQuickField name='headphonesURL'}}
+            <p class="text-muted">Enter the IP address or Hostname of your Headphones server. Do not include http:// or any slashes.</p>
+            <br>
+            {{> afQuickField name='headphonesPORT'}}
+            <p class="text-muted">Enter the port used by Headphones. The default is 8181.</p>
+            <br>
+            {{> afQuickField name='headphonesAPI' size="40"}}
+            <p class="text-muted">Enter your API from Headphones. It can be found in Headphones Settings -> Web Interface -> API Key.</p>
+            <br>
+            {{> afQuickField name='headphonesDIRECTORY' size="40"}}
+            <p class="text-muted">Enter your sub-directory for Headphones if used. It should also include the slash (/) at the start.</p>
+            <br>
+            {{> afQuickField name='headphonesSSL'}}
+            <p class="text-muted">Enabled if you use SSL on your Headphones server.</p>
+            <br>
+            <button type="submit" class="btn btn-primary-outline btn-block">Update Settings</button>
+          {{/autoForm}}
+        </div>
+
         <div class="col-md-8 settings-pane" style="display: none;" id="SettingsNotifications">
           {{#autoForm collection="Settings" doc=settings id="updateNotificationsSettingsForm" type="update" resetOnSuccess="false"}}
             {{> afQuickField name='customNotificationTITLE' size="40"}}
@@ -249,7 +284,7 @@
             {{> afQuickField name='customNotificationTEXT' size="40"}}
             <p class="text-muted"> Enter custom notification text</p>
             <br>
-          
+
             {{> afQuickField name='iftttENABLED'}}
             <p class="text-muted">Enabled IFTTT Maker.</p>
             <br>
@@ -271,7 +306,7 @@
             <p><button class="btn btn-secondary-outline" id="iftttTest">Test IFTTT Maker</button></p>
             <p class="text-muted">Test your IFTTT Maker channel. Remember to save your settings first!</p>
             <br>
-                        
+
             {{> afQuickField name='pushbulletENABLED'}}
             <p class="text-muted">Enabled Pushbullet to receive alerts.</p>
             <br>

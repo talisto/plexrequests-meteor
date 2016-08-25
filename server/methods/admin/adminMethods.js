@@ -48,7 +48,7 @@ Meteor.methods({
 		    var v_2 = v_2.replace(tags.link, req.link);
             r["value2"] = v_2;
         }
-        
+
 		if (settings.iftttMAKERVALUE3) {
 		    var v_3 = settings.iftttMAKERVALUE3.replace(tags.title, req.title);
 	        var v_3 = v_3.replace(tags.type, req.media_type);
@@ -61,11 +61,11 @@ Meteor.methods({
         }
 
         return r;
-    
+
     },
 
     setTestVARS: function (t, b, request) {
-		
+
 	    var tags = {
 		title: "<title>",
         type: "<type>",
@@ -74,7 +74,7 @@ Meteor.methods({
         release: "<year>",
         link: "<link>"
 	    };
-		
+
 		if (request === 'test') {
 			var req = {
 				title: "A Test Movie",
@@ -99,15 +99,18 @@ Meteor.methods({
 		var message_body = message_body.replace(tags.issues, req.issues);
 		var message_body = message_body.replace(tags.release, req.release);
 		var message_body = message_body.replace(tags.link, req.link);
-		
+
 		var r = {title: message_title, body: message_body}
 		return r
-  },	  
+  },
   testCouchPotato: function () {
     return CouchPotato.appAvailable();
   },
   testSickRage: function () {
     return SickRage.available();
+  },
+  testHeadphones: function () {
+    return Headphones.getVersion();
   },
   testSonarr: function () {
     return Sonarr.systemStatus();
@@ -159,18 +162,18 @@ Meteor.methods({
     logger.info("Slack tested successfully");
     return true;
   },
-  
+
    updateSeasonCount: function() {
 		try {
             var results = TV.find({seasons: -1}).fetch();
 		    for(i=0;i<results.length;i++){
                 var response = HTTP.call("GET", "http://api.tvmaze.com/shows/" + results[i].id + "/seasons", {})
-                var seasons = response.data; 
-                logger.info(results[i].id + " | " + results[i].title + " | " + seasons.length); 
-           
+                var seasons = response.data;
+                logger.info(results[i].id + " | " + results[i].title + " | " + seasons.length);
+
                 TV.update({_id: results[i]._id}, { $set: {seasons: seasons.length}});
             }
-        } 
+        }
         catch (error) {
             (error)
             logger.info(error);

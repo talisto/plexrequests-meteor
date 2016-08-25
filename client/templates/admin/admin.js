@@ -69,6 +69,20 @@ AutoForm.hooks({
       Bert.alert('Update failed, please try again', 'danger');
     }
   },
+  updateHeadphonesSettingsForm: {
+    onSuccess: function(formType, result) {
+      if (result) {
+        Bert.alert('Updated successfully', 'success');
+        Meteor.call("settingsUpdate");
+      }
+      this.event.preventDefault();
+      return false;
+    },
+    onError: function(formType, error) {
+      console.error(error);
+      Bert.alert('Update failed, please try again', 'danger');
+    }
+  },
   updateNotificationsSettingsForm: {
     onSuccess: function(formType, result) {
       if (result) {
@@ -151,13 +165,13 @@ Template.admin.onCreated(function(){
 
   Meteor.call("checkForUpdate", function (error, result) {
     if (result) {
-      instance.update.set(result)
+      instance.update.set(result);
     }
   });
 
   HTTP.get('https://api.github.com/repos/lokenx/plexrequests-meteor/releases', function (error, result) {
     if (error) {
-      console.error('Error retrieving release notes: ' + error)
+      console.error('Error retrieving release notes: ' + error);
     }
     instance.latestVersion.set(result.data[0].name);
     var notesArray = result.data[0].body.split("- ");
@@ -172,12 +186,12 @@ Template.admin.onCreated(function(){
 Template.admin.events({
   'click .list-group-item' : function (event, template) {
     var target = $(event.target);
-    
+
   //Update permissions collection
   if(target.text() == "Users") {
     Meteor.call("permissionsUpdateUsers");
   }
-    
+
     $('.list-group-item').removeClass("active");
     target.toggleClass("active");
 
@@ -190,7 +204,7 @@ Template.admin.events({
   },
   'click #usersSettingsSubmit' : function (event) {
     event.preventDefault();
-  
+
   try {
     $('*[id^="update-each-"]').submit();
     Bert.alert('Updated successfully', 'success');
@@ -212,7 +226,7 @@ Template.admin.events({
         btn.removeClass("btn-info-outline").addClass("btn-success-outline");
         btn.html("Success!");
       }
-    })
+    });
   },
   'click #sickRageTest' : function (event) {
     event.preventDefault();
@@ -226,7 +240,7 @@ Template.admin.events({
         btn.removeClass("btn-info-outline").addClass("btn-success-outline");
         btn.html("Success!");
       }
-    })
+    });
   },
   'click #sonarrTest' : function (event) {
     event.preventDefault();
@@ -240,9 +254,23 @@ Template.admin.events({
         btn.removeClass("btn-info-outline").addClass("btn-success-outline");
         btn.html("Success!");
       }
-    })
+    });
   },
-  'click #iftttTest' : function (event) {
+  'click #headphonesTest' : function (event) {
+    event.preventDefault();
+    var btn = $(event.target);
+    btn.html("Testing... <i class='fa fa-spin fa-refresh'></i>").removeClass().addClass("btn btn-info-outline");
+    Meteor.call("testHeadphones", function (error, result) {
+      if (error || !result) {
+        btn.removeClass("btn-info-outline").addClass("btn-danger-outline");
+        btn.html("Error!");
+      } else {
+        btn.removeClass("btn-info-outline").addClass("btn-success-outline");
+        btn.html("Success!");
+      }
+    });
+  },
+    'click #iftttTest' : function (event) {
     event.preventDefault();
     var btn = $(event.target);
     btn.html("Testing... <i class='fa fa-spin fa-refresh'></i>").removeClass().addClass("btn btn-info-outline");
@@ -255,7 +283,7 @@ Template.admin.events({
         btn.removeClass("btn-info-outline").addClass("btn-success-outline");
         btn.html("Success!");
       }
-    })
+    });
   },
   'click #pushbulletTest' : function (event) {
     event.preventDefault();
@@ -270,7 +298,7 @@ Template.admin.events({
         btn.removeClass("btn-info-outline").addClass("btn-success-outline");
         btn.html("Success!");
       }
-    })
+    });
   },
   'click #pushoverTest' : function (event) {
     event.preventDefault();
@@ -285,7 +313,7 @@ Template.admin.events({
         btn.removeClass("btn-info-outline").addClass("btn-success-outline");
         btn.html("Success!");
       }
-    })
+    });
   },
   'click #slackTest' : function (event) {
     event.preventDefault();
@@ -300,7 +328,7 @@ Template.admin.events({
         btn.removeClass("btn-info-outline").addClass("btn-success-outline");
         btn.html("Success!");
       }
-    })
+    });
   },
   'click #plexsubmit' : function (event) {
     event.preventDefault();

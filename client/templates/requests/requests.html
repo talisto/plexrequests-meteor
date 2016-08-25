@@ -6,7 +6,7 @@
         <p>Below you can see yours and all other requests, as well as their download and approval status.</p>
         {{#if currentUser}}
         <p>
-          Movies and TV:  <button class="btn btn-secondary-outline btn-sm" id="approveAll">Approve All</button>  <button class="btn btn-secondary-outline btn-sm" id="denyAll">Deny All</button>
+          <button class="btn btn-secondary-outline btn-sm" id="approveAll">Approve All</button>  <button class="btn btn-secondary-outline btn-sm" id="denyAll">Deny All</button>
         </p>
         {{/if}}
       </div>
@@ -40,8 +40,8 @@
         </div>
       </div>
     </div>
-    
-    
+
+
     <!-- Deny model -->
     <div class="modal fade" id="denyModel" role="dialog">
       <div class="modal-dialog">
@@ -57,7 +57,7 @@
           <input type="text" class="form-control" id="denyModelReason" placeholder="Reason for denying request">
         </div>
         <div class="modal-footer">
-          <button class="btn btn-default btn-danger-outline deny-confirm">Deny</button>  
+          <button class="btn btn-default btn-danger-outline deny-confirm">Deny</button>
         </div>
         </div>
       </div>
@@ -73,6 +73,9 @@
         {{#if searchType 'TV Shows'}}
             <img src="{{poster_path}}" class="img-responsive" alt="Poster">
           {{/if}}
+        {{#if searchType 'Albums'}}
+            <img src="{{poster_path}}" class="img-responsive" alt="Poster">
+          {{/if}}
         {{#if searchType 'Movies'}}
             <img src="https://image.tmdb.org/t/p/w154{{poster_path}}" class="img-responsive" alt="Poster">
           {{/if}}
@@ -82,8 +85,11 @@
             {{#if searchType 'Movies'}}
             <h4><li><a href="http://www.imdb.com/title/{{imdb}}" target="_blank"><strong>{{title}}</strong></a></li></h4>
             {{/if}}
+            {{#if searchType 'Albums'}}
+            <h4><li><a href="{{link}}" target="_blank"><strong>{{artist}} - {{title}} ({{format}})</strong></a></li></h4>
+            {{/if}}
             {{#if searchType 'TV Shows'}}
-            <h4> <li><a href="{{link}}" target="_blank"><strong>{{title}} ({{year}})</strong></a></li></h4>    
+            <h4> <li><a href="{{link}}" target="_blank"><strong>{{title}} ({{year}})</strong></a></li></h4>
             <li><strong>Seasons:</strong> {{season_count}}</li>
             <li><strong>Type:</strong> {{episodes}}</li>
             {{/if}}
@@ -99,7 +105,7 @@
             {{#if currentUser}}
             <p>
               {{#if approved_show}}
-                <button class="btn btn-sm btn-success-outline approve-item">Approve</button>    
+                <button class="btn btn-sm btn-success-outline approve-item">Approve</button>
               {{/if}}
               {{#if denied_show}}
                 <button class="btn btn-sm btn-danger-outline deny-item" data-toggle="model" data-target="#denyModel">Deny</button>
@@ -122,8 +128,10 @@
               </button>
               <ul class="dropdown-menu">
                 <li><a href="#" class="issue-select dropdown-item" data="Wrong Audio">Wrong audio</a></li>
+            {{#if searchType 'Movies'}}
                 <li><a href="#" class="issue-select dropdown-item" data="No Subtitles">No subtitles</a></li>
                 <li><a href="#" class="issue-select dropdown-item" data="Wrong Content">Wrong content</a></li>
+            {{/if}}
                 <li><a href="#" class="issue-select dropdown-item" data="Playback issues">Playback issues</a></li>
               </ul>
             </div>

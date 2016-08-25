@@ -3,7 +3,16 @@ Meteor.methods({
     check(request, Object);
 
     var settings = Settings.find().fetch()[0];
-    var type = (request.media_type === 'tv') ? 'TV Show' : 'Movie';
+    var type;
+
+    if (request.media_type === 'movie') {
+        type = 'Movie';
+    } else if (request.media_type === 'tv') {
+        type = 'TV Show';
+    } else if (request.media_type === 'music') {
+        type = 'Music';
+    }
+
     var message = Meteor.call(
       "setTestVARS",
       settings.customNotificationTITLE,
@@ -13,18 +22,18 @@ Meteor.methods({
 
     if (request.notification_type === 'request') {
       if (settings.pushbulletENABLED) {
-        Meteor.call("sendPushbulletNotification", settings, message.title, message.body)
+        Meteor.call("sendPushbulletNotification", settings, message.title, message.body);
       }
       if (settings.pushoverENABLED) {
-        Meteor.call("sendPushoverNotification", settings, message.title, message.body)
+        Meteor.call("sendPushoverNotification", settings, message.title, message.body);
       }
       if (settings.slackENABLED) {
-        Meteor.call("sendSlackNotification", settings, message.title + ":\n" + message.body)
+        Meteor.call("sendSlackNotification", settings, message.title + ":\n" + message.body);
       }
 
-      if (settings.iftttENABLED){
+      if (settings.iftttENABLED) {
         try {
-          Meteor.call("sendIFTTT", settings, request)
+          Meteor.call("sendIFTTT", settings, request);
 
         } catch (error) {
           console.log(error);
@@ -37,7 +46,7 @@ Meteor.methods({
           settings,
           'Plex Requests ' + type + ' Issue',
           request.title + ' Issues: ' + request.issues.toString() + ' (' + request.user + ')'
-        )
+        );
       }
       if (settings.pushoverENABLED) {
         Meteor.call(
@@ -45,19 +54,19 @@ Meteor.methods({
           settings,
           'Plex Requests ' + type + ' Issue',
           request.title + ' Issues: ' + request.issues.toString() + ' (' + request.user + ')'
-        )
+        );
       }
       if (settings.slackENABLED) {
         Meteor.call(
           "sendSlackNotification",
           settings,
           request.title + ' Issues: ' + request.issues.toString() + ' (' + request.user + ')'
-        )
+        );
       }
-      if (settings.iftttENABLED){
-        request["notification_type"] = "issue";
+      if (settings.iftttENABLED) {
+        request.notification_type = "issue";
         console.log("IFTTT: Attempting to send...");
-        Meteor.call("sendIFTTT", settings, request)
+        Meteor.call("sendIFTTT", settings, request);
       }
     }
   }

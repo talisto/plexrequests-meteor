@@ -40,8 +40,7 @@ Template.requests.onCreated(function () {
     var selectedSort = instance.sort.get();
     var sort = (selectedSort === "Newest First") ? {createdAt: -1} : {createdAt: 1};
 
-    if (instance.searchType.get() === "Movies") {
-      if (selectedFilter !== "All Requests") {
+    if (selectedFilter !== "All Requests") {
         switch (selectedFilter) {
           case "Approved":
             filter = {approval_status: 1};
@@ -64,36 +63,16 @@ Template.requests.onCreated(function () {
           default:
             filter = {};
         }
-      }
+    }
+
+    if (instance.searchType.get() === "Movies") {
       return Movies.find(filter, {sort: sort, skip: 0, limit: instance.loaded.get()});
+    } else if (instance.searchType.get() == "Albums" || instance.searchType.get() == "Artists") {
+      return Music.find(filter, {sort: sort, skip: 0, limit: instance.loaded.get()});
     } else {
-      if (selectedFilter !== "All Requests") {
-        switch (selectedFilter) {
-          case "Approved":
-            filter = {approval_status: 1};
-            break;
-          case "Not Approved":
-            filter = {approval_status: 0};
-            break;
-          case "Downloaded":
-            filter = {"status.downloaded": {$gt: 0}};
-            break;
-          case "Not Downloaded":
-            filter = {"status.downloaded": {$lt: 1}};
-            break;
-          case "Denied":
-            filter = {approval_status: 2};
-            break;
-          case "Has Issues":
-            filter = {'issues.0': {$exists: true}};
-            break;
-          default:
-            filter = {};
-        }
-      }
       return TV.find(filter, {sort: sort, skip: 0, limit: instance.loaded.get()});
     }
-  }
+  };
 });
 
 Template.requests.helpers({
@@ -113,10 +92,13 @@ Template.requests.helpers({
     } else {
       return "New Episodes";
     }
-    
+
   },
 
   'link' : function () {
+    if (this.url) {
+        return this.url;
+    }
     var link = 'http://tvmaze.com/shows/' + this.id + '/' + this.title;
     return link;
   },
@@ -160,7 +142,7 @@ Template.requests.helpers({
     }
   },
   'approval_status' : function () {
-  
+
     var approval;
 
     switch(this.approval_status) {
@@ -182,7 +164,7 @@ Template.requests.helpers({
   'download_status' : function () {
     //Movie true/false
     var approval;
-    if (this.imdb) {
+    if (this.imdb || Template.instance().searchType.get() == 'Albums') {
       approval = (this.downloaded) ? '<i class="fa fa-check success-icon"></i>': '<i class="fa fa-times error-icon"></i>';
     } else {
       //TV dowloaded:total
@@ -208,11 +190,11 @@ Template.requests.helpers({
     }
   },
   'season_count' : function () {
-    var count;  
+    var count;
     if (this.seasons !== -1) {
           count = this.seasons
       } else {
-         count = "N/A" 
+         count = "N/A"
       }
     return count
   },
@@ -220,7 +202,7 @@ Template.requests.helpers({
     return Session.get("searchOptions");
   },
   'activeSearch' : function () {
-    return (Template.instance().searchType.get().length === this.length);
+    return (Template.instance().searchType.get() === this.toString());
   },
   'filterOptions' : function () {
     return [{filter: "All Requests"}, {filter: "Approved"}, {filter: "Not Approved"},{filter: "Downloaded"}, {filter: "Not Downloaded"}, {filter: "Denied"}, {filter: "Has Issues"}]
@@ -270,15 +252,15 @@ Template.requests.events({
     $('#denyModel').modal('show');
   },
   'click .deny-confirm' : function (event, template) {
-    
+
     //Get values
     var id = $('#denyModelID').text();
     var reason = $('#denyModelReason').val();
     var title = $('#denyModelTitle').text();
-    
+
     //Hide the model
     $('#denyModel').modal('hide');
-    
+
     //Deny all
     if(id == "ALL") {
       Meteor.call("denyAll", reason, function(error, result) {
@@ -381,7 +363,7 @@ Template.requests.events({
   },
   'click #denyAll': function (event) {
     event.preventDefault();
-    
+
     //Set values
     $('#denyModelID').text("ALL");
     $('#denyModelTitle').text("Deny All");

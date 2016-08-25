@@ -18,6 +18,12 @@ Meteor.methods({
     Sonarr.port = settings.sonarrPORT;
     Sonarr.api = settings.sonarrAPI;
     Sonarr.directory = settings.sonarrDIRECTORY || "";
+
+    //set Headphones on start-up
+    Headphones.url = (settings.headphonesSSL) ? "https://" + settings.headphonesURL : "http://" + settings.headphonesURL;
+    Headphones.port = settings.headphonesPORT;
+    Headphones.api = settings.headphonesAPI;
+    Headphones.directory = settings.headphonesDIRECTORY || "";
   },
   userCount : function () {
     return Meteor.users.find({}).count();
