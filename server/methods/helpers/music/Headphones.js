@@ -94,7 +94,7 @@ Headphones = {
 
   addArtist: function(id) {
     logger.info('Adding artist ' + id + ' to Headphones');
-    return this.query('addArtist', { id: id });
+    return this.query('addArtist', { id: id }, 300000);
   },
 
   getAlbum: function(id) {
@@ -112,6 +112,7 @@ Headphones = {
   },
 
   queueAlbum: function(id, artist_id) {
+    logger.info('Queuing album ' + id + ' in Headphones');
     var Album = this.getAlbum(id);
     // if album exists, we can queue it
     if (Album.album && Album.album.length > 0) {
