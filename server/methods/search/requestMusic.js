@@ -26,15 +26,15 @@ Meteor.methods({
       approval_status: 1
     };
 
-    var release;
-    if (request.album_id) {
-      release = MusicBrainz.getRelease(request.album_id);
-      if (release && release.releases && release.releases.length > 0) {
-        console.log('MusicBrainz release:', release.releases[0]);
-        record.released = release.date;
-        record.status = release.status;
-        record.tracks = release.tracks;
-      }
+    var releaseGroup = MusicBrainz.getReleaseGroup(request.id);
+    if (releaseGroup && releaseGroup['first-release-date']) {
+      record.released = releaseGroup['first-release-date'];
+    }
+
+    if (releaseGroup && releaseGroup.releases && releaseGroup.releases.length > 0) {
+      record.status = releaseGroup.releases[0].status;
+      record.country = releaseGroup.releases[0].country;
+      record.tracks = releaseGroup.releases[0].media[0]['track-count'];
     }
 
     var poster_path = CoverArt.largeForReleaseGroupId(request.id);
