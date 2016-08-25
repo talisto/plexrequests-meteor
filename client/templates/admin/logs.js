@@ -12,7 +12,7 @@ Template.logs.helpers({
         { key: 'level', label: 'Level' },
         { key: 'message', label: 'Message' },
         { key: 'timestamp', label: 'Time', sortDirection: 'descending', sortOrder: 0, fn: function (value) {
-          return new Spacebars.SafeString(moment(value).format("YYYY/MM/D HH:mm:ss"))
+          return new Spacebars.SafeString(moment(value).format("YYYY/MM/D HH:mm:ss"));
         }}
       ]
     };
@@ -25,10 +25,10 @@ Template.logs.onCreated(function () {
 
   Meteor.call("getLogs", 0, 100, function (error, data) {
     if (error) {
-      console.error(error)
+      console.error(error);
     }
 
     instance.logs.set(data);
 
-  })
+  });
 });

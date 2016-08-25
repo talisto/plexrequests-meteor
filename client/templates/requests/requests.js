@@ -115,30 +115,24 @@ Template.requests.helpers({
     switch(this.approval_status) {
     case 0:
       return true;
-      break;
     case 1:
       return false;
-      break;
     case 2:
       return true;
-      break;
     default:
-      console.error("Approval integer out of range")
+      console.error("Approval integer out of range");
     }
   },
   'denied_show' : function () {
     switch(this.approval_status) {
     case 0:
       return true;
-      break;
     case 1:
       return false;
-      break;
     case 2:
       return false;
-      break;
     default:
-      console.error("Approval integer out of range")
+      console.error("Approval integer out of range");
     }
   },
   'approval_status' : function () {
@@ -156,7 +150,7 @@ Template.requests.helpers({
         approval = '<strong>Denied:</strong> <font color="#db524b">' + this.denied_reason + '</font></i>';
         break;
       default:
-        console.error("Approval integer out of range")
+        console.error("Approval integer out of range");
     }
 
       return approval;
@@ -192,11 +186,11 @@ Template.requests.helpers({
   'season_count' : function () {
     var count;
     if (this.seasons !== -1) {
-          count = this.seasons
+          count = this.seasons;
       } else {
-         count = "N/A"
+         count = "N/A";
       }
-    return count
+    return count;
   },
   'searchOptions': function () {
     return Session.get("searchOptions");
@@ -205,13 +199,21 @@ Template.requests.helpers({
     return (Template.instance().searchType.get() === this.toString());
   },
   'filterOptions' : function () {
-    return [{filter: "All Requests"}, {filter: "Approved"}, {filter: "Not Approved"},{filter: "Downloaded"}, {filter: "Not Downloaded"}, {filter: "Denied"}, {filter: "Has Issues"}]
+    return [
+      {filter: "All Requests"},
+      {filter: "Approved"},
+      {filter: "Not Approved"},
+      {filter: "Downloaded"},
+      {filter: "Not Downloaded"},
+      {filter: "Denied"},
+      {filter: "Has Issues"}
+    ];
   },
   'activeFilter' : function () {
     return (Template.instance().filter.get() == this.filter) ? '<i class="fa fa-check"></i> ' : "";
   },
   'sortOptions' : function () {
-    return [{sort: "Newest First"}, {sort: "Oldest First"}]
+    return [{sort: "Newest First"}, {sort: "Oldest First"}];
   },
   'activeSort' : function () {
     return (Template.instance().sort.get() == this.sort) ? '<i class="fa fa-check"></i> ' : "";
@@ -312,7 +314,7 @@ Template.requests.events({
         // Alert success
         Bert.alert("Added issue successfully!", "success");
       }
-    })
+    });
   },
   'click .clear-issues' : function (event, template) {
     Meteor.call("clearIssues", this, function (error, result) {
@@ -324,7 +326,7 @@ Template.requests.events({
         // Alert success
         Bert.alert("Cleared issues successfully", "success");
       }
-    })
+    });
   },
   'click .filter-select' : function (event, template) {
     var filter = event.target.text;
@@ -359,7 +361,7 @@ Template.requests.events({
       } else {
         Bert.alert("Approved all requests!", "success");
       }
-    })
+    });
   },
   'click #denyAll': function (event) {
     event.preventDefault();
@@ -370,7 +372,7 @@ Template.requests.events({
     $('#denyModel').modal('show');
   },
   'click .go-to-top': function () {
-    $('body').animate({ scrollTop: 0 }, "slow")
+    $('body').animate({ scrollTop: 0 }, "slow");
   },
   'click .mark-available': function (event, template) {
     var movie = this;
@@ -381,7 +383,7 @@ Template.requests.events({
         Bert.alert("Error marking as available, please try again!", "danger");
       }
       Bert.alert(movie.title + " marked as available!", "success");
-    })
+    });
   },
   'click .mark-unavailable': function (event, template) {
     var movie = this;
@@ -392,7 +394,7 @@ Template.requests.events({
         Bert.alert("Error marking as unavailable, please try again!", "danger");
       }
       Bert.alert(movie.title + " marked as unavailable!", "success");
-    })
+    });
   }
 });
 
