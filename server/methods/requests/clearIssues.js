@@ -7,7 +7,7 @@ Meteor.methods({
 				Movies.update(request._id, {$set: {issues: [] }});
 				return true;
 			} catch (error) {
-				logger.error("Adding issue error -> " + error.message);
+				logger.error("Clearing issue error -> " + error.message);
 				return false;
 			}
 		} else if (request.tvdb) {
@@ -15,7 +15,15 @@ Meteor.methods({
 				TV.update(request._id, {$set: {issues: [] }});
 				return true;
 			} catch (error) {
-				logger.error("Adding issue error -> " + error.message);
+				logger.error("Clearing issue error -> " + error.message);
+				return false;
+			}
+		} else if (request.artist) {
+			try {
+				Music.update(request._id, {$set: {issues: [] }});
+				return true;
+			} catch (error) {
+				logger.error("Clearing issue error -> " + error.message);
 				return false;
 			}
 		}
